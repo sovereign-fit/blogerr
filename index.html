@@ -18,10 +18,13 @@
           <span class="hidden sm:inline-block text-xs text-slate-400 ml-2">Florida Senior Relocation & CDD Transparency Index</span>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="https://www.agentpulse.pro" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3.5 py-2.5 rounded-lg transition">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="https://www.agentpulse.pro" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-2.5 rounded-lg transition">
           Newsletter (Beehiiv) ↗
         </a>
+        <button onclick="if(window.$chatwoot){window.$chatwoot.toggle('open');}" class="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-2.5 rounded-lg transition">
+          💬 Live Concierge
+        </button>
         <button onclick="openLeadModal('2026 Florida Master Relocation Guide')" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition shadow-sm">
           Download 2026 Relocation Guide
         </button>
@@ -141,9 +144,9 @@
         Receive the full 2026 CDD bond payoff schedule, recent sold comps, flood/wind insurance quotes, and vetted senior relocation specialist intro.
       </p>
       <form onsubmit="submitLead(event)" class="space-y-3">
-        <input required type="text" placeholder="Your Full Name" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
-        <input required type="email" placeholder="Best Email Address" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
-        <select class="w-full border border-slate-300 rounded-lg text-sm p-2.5">
+        <input id="lead-name" required type="text" placeholder="Your Full Name" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
+        <input id="lead-email" required type="email" placeholder="Best Email Address" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
+        <select id="lead-timeline" class="w-full border border-slate-300 rounded-lg text-sm p-2.5">
           <option>Timeline: Moving in 3–6 Months</option>
           <option>Timeline: Moving in 6–12 Months</option>
           <option>Timeline: Researching for Parents / Family</option>
@@ -151,6 +154,9 @@
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 rounded-lg transition shadow">
           Send My Full Cost Breakdown →
         </button>
+        <p class="text-[11px] text-slate-400 text-center pt-1">
+          Routed via <strong>EazyReply (contact@agentpulse.pro → bcox@m.marywood.edu)</strong> &amp; Live Chatwoot Messenger
+        </p>
       </form>
     </div>
   </div>
@@ -353,11 +359,52 @@
 
     function submitLead(e) {
       e.preventDefault();
-      alert("Dossier request captured! Ready to wire to your AgentPulse.pro CRM / Google Sheet webhook.");
+      const name = document.getElementById("lead-name").value.trim();
+      const email = document.getElementById("lead-email").value.trim();
+      const timeline = document.getElementById("lead-timeline").value;
+      const dossierTitle = document.getElementById("modal-community-title").textContent;
+
+      if (window.$chatwoot) {
+        window.$chatwoot.setUser(email, { name: name, email: email });
+        window.$chatwoot.setCustomAttributes({
+          requested_dossier: dossierTitle,
+          relocation_timeline: timeline,
+          eazyreply_forward: "contact@agentpulse.pro -> bcox@m.marywood.edu",
+          authorized_scheduler: "bcox@m.marywood.edu"
+        });
+        window.$chatwoot.toggle("open");
+      }
+
+      const subject = encodeURIComponent("[AgentPulse.pro Dossier] " + dossierTitle + " — " + name);
+      const body = encodeURIComponent(
+        "Name: " + name + "\nEmail: " + email + "\nRequested Dossier: " + dossierTitle + "\n" + timeline + "\n\n(Automatically forwarded via EazyReply @agentpulse.pro to bcox@m.marywood.edu)"
+      );
+      const mailLink = document.createElement("a");
+      mailLink.href = "mailto:contact@agentpulse.pro?cc=bcox@m.marywood.edu&subject=" + subject + "&body=" + body;
+      mailLink.click();
+
       closeLeadModal();
     }
 
     renderTable();
+  </script>
+
+  <!-- Chatwoot Live Messenger Widget (Account #195971 / Inbox #154348 for agentpulse.pro) -->
+  <script>
+    window.chatwootSettings = {"position":"right","type":"standard","launcherTitle":"Relocation Desk"};
+    (function(d,t) {
+      var BASE_URL="https://app.chatwoot.com";
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=BASE_URL+"/packs/js/sdk.js";
+      g.async = true;
+      s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({
+          websiteToken: 'nVRiQamGrab3wcTb3atSC7L4',
+          baseUrl: BASE_URL
+        })
+      }
+    })(document,"script");
   </script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+{
+  "domain": "agentpulse.pro",
+  "blogerrRepo": "https://github.com/sovereign-fit/blogerr",
+  "authorizedSender": "bcox@m.marywood.edu",
+  "authorizedScheduler": "bcox@m.marywood.edu",
+  "forwardTo": "bcox@m.marywood.edu",
+  "readFromEmail": {
+    "host": "imap.porkbun.com",
+    "user": "contact@agentpulse.pro",
+    "password": "${AGENTPULSE_EMAIL_PASSWORD}",
+    "port": 993
+  },
+  "sendFromEmail": {
+    "host": "smtp.porkbun.com",
+    "user": "contact@agentpulse.pro",
+    "password": "${AGENTPULSE_EMAIL_PASSWORD}",
+    "port": 465,
+    "authorizedSenders": [
+      "bcox@m.marywood.edu"
+    ]
+  },
+  "kimiSchedule": {
+    "enabled": true,
+    "agent": "kimi-agent",
+    "authorizedScheduler": "bcox@m.marywood.edu",
+    "cron": "*/15 * * * *",
+    "forwardTarget": "bcox@m.marywood.edu"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "authorizedScheduler": "bcox@m.marywood.edu",
+  "domain": "agentpulse.pro",
+  "forwardTo": "bcox@m.marywood.edu",
+  "subject": "AgentPulse.pro — Florida 55+ Relocation Desk Received Your Inquiry",
+  "message": "Thank you for contacting AgentPulse.pro. Your message has been forwarded to Brian Cox (bcox@m.marywood.edu) for immediate review."
+}

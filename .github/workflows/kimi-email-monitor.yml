@@ -1,0 +1,30 @@
+name: Kimi Scheduled Email Monitor (agentpulse.pro -> bcox@m.marywood.edu)
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  EAZYREPLY_SCHEDULER: "bcox@m.marywood.edu"
+  AUTHORIZED_SENDER: "bcox@m.marywood.edu"
+  FORWARD_TO: "bcox@m.marywood.edu"
+  AGENTPULSE_DOMAIN: "agentpulse.pro"
+
+jobs:
+  monitor-and-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout EazyReply
+        uses: actions/checkout@v4
+
+      - name: Verify Authorized Scheduler (bcox@m.marywood.edu)
+        run: |
+          if [ "$EAZYREPLY_SCHEDULER" != "bcox@m.marywood.edu" ]; then
+            echo "Unauthorized scheduler: $EAZYREPLY_SCHEDULER"
+            exit 1
+          fi
+          python3 scripts/kimi_email_monitor.py
