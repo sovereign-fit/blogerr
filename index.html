@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentPulse.pro — Florida 55+ Senior Relocation & CDD Fee Index</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased pb-24">
+
+  <!-- ZONE 1: Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="bg-blue-600 text-white font-bold px-2.5 py-1 rounded-lg text-sm">AP</span>
+        <div>
+          <span class="font-bold text-slate-900 text-lg tracking-tight">AgentPulse.pro</span>
+          <span class="hidden sm:inline-block text-xs text-slate-400 ml-2">Florida Senior Relocation & CDD Transparency Index</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="openLeadModal('2026 Florida Master Relocation Guide')" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition shadow-sm">
+          Download 2026 Relocation Guide
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ZONE 2: Hero & Stat Callouts -->
+  <section class="max-w-7xl mx-auto px-4 pt-8 pb-4">
+    <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-2xl p-6 md:p-8 shadow-md">
+      <div class="max-w-3xl">
+        <span class="inline-block bg-blue-500/20 text-blue-200 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+          Updated Daily via Google Sheets → GitHub Sync
+        </span>
+        <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">
+          The True Carrying-Cost Index for Florida 55+ Communities
+        </h1>
+        <p class="text-slate-300 text-sm md:text-base mb-6">
+          Compare hidden CDD bond assessments, monthly HOA fees, inland vs. coastal hurricane insurance tiers, and VA Medical Center drive times before you tour.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t border-white/10 text-xs">
+        <div>
+          <span class="text-slate-400 block">Communities Indexed</span>
+          <span class="text-lg font-bold text-white">8 Master-Planned</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block">Zero-CDD Communities</span>
+          <span class="text-lg font-bold text-emerald-400">4 Verified</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block">VA Clinic Drive Time</span>
+          <span class="text-lg font-bold text-white">12 – 38 Mins</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block">Golf Cart Legal</span>
+          <span class="text-lg font-bold text-blue-300">100% Trail Access</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZONE 3 & 4: Quick Filter Bar & Interactive Directory Data Grid -->
+  <section class="max-w-7xl mx-auto px-4 py-4">
+    <!-- Controls & Filters -->
+    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Search Community</label>
+          <input id="filter-search" oninput="renderTable()" type="text" placeholder="e.g. Villages, Ocala, Solivita..." class="w-full border border-slate-300 rounded-lg text-sm p-2.5 focus:ring-2 focus:ring-blue-600 outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Region</label>
+          <select id="filter-region" onchange="renderTable()" class="w-full border border-slate-300 rounded-lg text-sm p-2.5 focus:ring-2 focus:ring-blue-600">
+            <option value="ALL">All Florida Regions</option>
+            <option value="Central">Central (The Villages, Ocala, Orlando)</option>
+            <option value="Gulf Coast">Gulf Coast (Tampa, Sarasota, Spring Hill)</option>
+            <option value="Atlantic Coast">Atlantic Coast (Daytona, Palm Beach)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Target Price Range</label>
+          <select id="filter-price" onchange="renderTable()" class="w-full border border-slate-300 rounded-lg text-sm p-2.5 focus:ring-2 focus:ring-blue-600">
+            <option value="ALL">Any Price</option>
+            <option value="350000">Entry Under $350k</option>
+            <option value="550000">Entry $350k – $550k</option>
+            <option value="550001">Luxury $550k+</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">VA Health Proximity</label>
+          <select id="filter-va" onchange="renderTable()" class="w-full border border-slate-300 rounded-lg text-sm p-2.5 focus:ring-2 focus:ring-blue-600">
+            <option value="999">Any Distance</option>
+            <option value="20">Under 20 Minutes</option>
+            <option value="30">Under 30 Minutes</option>
+            <option value="45">Under 45 Minutes</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button onclick="resetFilters()" class="w-full bg-slate-900 text-white font-medium text-sm py-2.5 rounded-lg hover:bg-slate-800 transition">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Directory Table -->
+    <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-sm">
+      <table class="w-full text-left text-sm text-slate-600">
+        <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase text-slate-500 tracking-wider">
+          <tr>
+            <th scope="col" class="py-4 px-6">Community & Location</th>
+            <th scope="col" class="py-4 px-4">Median Price</th>
+            <th scope="col" class="py-4 px-4">HOA + CDD Fees</th>
+            <th scope="col" class="py-4 px-4">Carrying Cost Index</th>
+            <th scope="col" class="py-4 px-4">VA Facility</th>
+            <th scope="col" class="py-4 px-4">Golf Cart</th>
+            <th scope="col" class="py-4 px-6 text-right">Lead Action</th>
+          </tr>
+        </thead>
+        <tbody id="community-tbody" class="divide-y divide-slate-100"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ZONE 5: 2-Step Lead Capture Modal -->
+  <div id="lead-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Free Relocation Dossier</span>
+          <h3 id="modal-community-title" class="text-lg font-bold text-slate-900 mt-0.5">Community Cost Breakdown</h3>
+        </div>
+        <button onclick="closeLeadModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">
+        Receive the full 2026 CDD bond payoff schedule, recent sold comps, flood/wind insurance quotes, and vetted senior relocation specialist intro.
+      </p>
+      <form onsubmit="submitLead(event)" class="space-y-3">
+        <input required type="text" placeholder="Your Full Name" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
+        <input required type="email" placeholder="Best Email Address" class="w-full border border-slate-300 rounded-lg text-sm p-2.5" />
+        <select class="w-full border border-slate-300 rounded-lg text-sm p-2.5">
+          <option>Timeline: Moving in 3–6 Months</option>
+          <option>Timeline: Moving in 6–12 Months</option>
+          <option>Timeline: Researching for Parents / Family</option>
+        </select>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 rounded-lg transition shadow">
+          Send My Full Cost Breakdown →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Banner -->
+  <div class="fixed bottom-0 inset-x-0 bg-slate-900 text-white border-t border-slate-700 py-3 px-4 z-40">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+      <div>
+        <strong class="text-blue-300">Confused by Florida CDD bonds vs. HOA fees?</strong> Get our custom 3-community side-by-side carrying cost comparison.
+      </div>
+      <button onclick="openLeadModal('Custom 3-Community Side-by-Side Comparison')" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-1.5 rounded-lg transition">
+        Request Custom Comparison
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const COMMUNITIES = [
+      {
+        name: "On Top of the World",
+        sub: "Ocala, Marion County • 55+ Gated Active Adult",
+        region: "Central",
+        priceMin: 260000,
+        priceDisplay: "$260k – $490k",
+        hoaDisplay: "$195–$340/mo",
+        cddNote: "No CDD bond on classic phases; amenities + lawn included",
+        carryTier: "Low (Non-Coastal)",
+        carryColor: "bg-emerald-100 text-emerald-800",
+        vaName: "The Villages VA Outpatient Clinic",
+        vaMins: 22,
+        golfCart: "Yes (Designated Trails)"
+      },
+      {
+        name: "The Villages",
+        sub: "Sumter/Marion/Lake • 55+ Mega Active Adult",
+        region: "Central",
+        priceMin: 295000,
+        priceDisplay: "$295k – $680k",
+        hoaDisplay: "$340–$520/mo",
+        cddNote: "Amenity fee ~$195/mo + CDD bond varies by District (1–15)",
+        carryTier: "Low (Non-Coastal)",
+        carryColor: "bg-emerald-100 text-emerald-800",
+        vaName: "The Villages VA Outpatient Clinic",
+        vaMins: 12,
+        golfCart: "Yes (90+ Miles of Paths)"
+      },
+      {
+        name: "Solivita",
+        sub: "Kissimmee, Polk County • 55+ Master Planned Gated",
+        region: "Central",
+        priceMin: 275000,
+        priceDisplay: "$275k – $510k",
+        hoaDisplay: "$350–$430/mo",
+        cddNote: "Includes Poinciana CDD debt + maintenance assessment",
+        carryTier: "Low (Non-Coastal)",
+        carryColor: "bg-emerald-100 text-emerald-800",
+        vaName: "Orlando VA Medical Center (Lake Nona)",
+        vaMins: 38,
+        golfCart: "Yes (Street Legal Inside)"
+      },
+      {
+        name: "Sun City Center",
+        sub: "Hillsborough County • 55+ Self-Governed Active Adult",
+        region: "Gulf Coast",
+        priceMin: 220000,
+        priceDisplay: "$220k – $460k",
+        hoaDisplay: "$135–$260/mo",
+        cddNote: "No CDD in original SCC; Renaissance phase carries club fee",
+        carryTier: "Moderate",
+        carryColor: "bg-amber-100 text-amber-800",
+        vaName: "James A. Haley Veterans' Hospital (Tampa)",
+        vaMins: 31,
+        golfCart: "Yes (Citywide Golf Cart Roads)"
+      },
+      {
+        name: "Cresswind at Lakewood Ranch",
+        sub: "Lakewood Ranch, Manatee County • 55+ Boutique Gated",
+        region: "Gulf Coast",
+        priceMin: 480000,
+        priceDisplay: "$480k – $820k",
+        hoaDisplay: "$510–$590/mo",
+        cddNote: "Active Lakewood Ranch Stewardship District assessment",
+        carryTier: "Moderate",
+        carryColor: "bg-amber-100 text-amber-800",
+        vaName: "Sarasota VA Outpatient Clinic",
+        vaMins: 19,
+        golfCart: "Yes (Internal Trails)"
+      },
+      {
+        name: "Latitude Margaritaville",
+        sub: "Daytona Beach, Volusia County • 55+ Resort Active Adult",
+        region: "Atlantic Coast",
+        priceMin: 390000,
+        priceDisplay: "$390k – $640k",
+        hoaDisplay: "$380–$440/mo",
+        cddNote: "Includes Town Center beach shuttle & resort club access",
+        carryTier: "Moderate",
+        carryColor: "bg-amber-100 text-amber-800",
+        vaName: "Daytona Beach VA Multispecialty Clinic",
+        vaMins: 14,
+        golfCart: "Yes (Designated Trails)"
+      },
+      {
+        name: "Timber Pines",
+        sub: "Spring Hill, Hernando County • 55+ Gated Country Club",
+        region: "Gulf Coast",
+        priceMin: 235000,
+        priceDisplay: "$235k – $430k",
+        hoaDisplay: "$282/mo",
+        cddNote: "Zero CDD bond; includes fiber internet, cable & 4 golf courses",
+        carryTier: "Low (Non-Coastal)",
+        carryColor: "bg-emerald-100 text-emerald-800",
+        vaName: "New Port Richey VA Outpatient Clinic",
+        vaMins: 26,
+        golfCart: "Yes (Designated Trails)"
+      },
+      {
+        name: "Valencia Grand",
+        sub: "Boynton Beach, Palm Beach County • 55+ Luxury",
+        region: "Atlantic Coast",
+        priceMin: 690000,
+        priceDisplay: "$690k – $1.25M",
+        hoaDisplay: "$645/mo",
+        cddNote: "No CDD; South FL windstorm insurance zone + full social club",
+        carryTier: "High (Coastal Wind Zone)",
+        carryColor: "bg-rose-100 text-rose-800",
+        vaName: "West Palm Beach VA Medical Center",
+        vaMins: 28,
+        golfCart: "Yes (Internal Paths)"
+      }
+    ];
+
+    function renderTable() {
+      const q = document.getElementById("filter-search").value.toLowerCase();
+      const reg = document.getElementById("filter-region").value;
+      const price = document.getElementById("filter-price").value;
+      const vaMax = parseInt(document.getElementById("filter-va").value, 10);
+
+      const filtered = COMMUNITIES.filter(c => {
+        if (q && !(c.name.toLowerCase().includes(q) || c.sub.toLowerCase().includes(q))) return false;
+        if (reg !== "ALL" && c.region !== reg) return false;
+        if (price === "350000" && c.priceMin >= 350000) return false;
+        if (price === "550000" && (c.priceMin < 350000 || c.priceMin > 550000)) return false;
+        if (price === "550001" && c.priceMin < 550000) return false;
+        if (c.vaMins > vaMax) return false;
+        return true;
+      });
+
+      const tbody = document.getElementById("community-tbody");
+      tbody.innerHTML = filtered.map(c => `
+        <tr class="hover:bg-slate-50/75 transition">
+          <td class="py-4 px-6">
+            <div class="font-bold text-slate-900">${c.name}</div>
+            <div class="text-xs text-slate-400">${c.sub}</div>
+          </td>
+          <td class="py-4 px-4 font-medium text-slate-800">${c.priceDisplay}</td>
+          <td class="py-4 px-4">
+            <span class="font-medium text-slate-800">${c.hoaDisplay}</span>
+            <span class="text-xs text-slate-400 block">${c.cddNote}</span>
+          </td>
+          <td class="py-4 px-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${c.carryColor}">
+              ${c.carryTier}
+            </span>
+          </td>
+          <td class="py-4 px-4 text-xs">
+            <span class="font-medium text-slate-800 block">${c.vaName}</span>
+            ${c.vaMins} min drive
+          </td>
+          <td class="py-4 px-4 text-xs font-medium text-emerald-700">✓ ${c.golfCart}</td>
+          <td class="py-4 px-6 text-right">
+            <button onclick="openLeadModal('${c.name}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2 px-3.5 rounded-lg transition shadow-sm">
+              Request Dossier
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function resetFilters() {
+      document.getElementById("filter-search").value = "";
+      document.getElementById("filter-region").value = "ALL";
+      document.getElementById("filter-price").value = "ALL";
+      document.getElementById("filter-va").value = "999";
+      renderTable();
+    }
+
+    function openLeadModal(title) {
+      document.getElementById("modal-community-title").textContent = title + " — Cost Dossier";
+      const modal = document.getElementById("lead-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeLeadModal() {
+      const modal = document.getElementById("lead-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function submitLead(e) {
+      e.preventDefault();
+      alert("Dossier request captured! Ready to wire to your AgentPulse.pro CRM / Google Sheet webhook.");
+      closeLeadModal();
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
