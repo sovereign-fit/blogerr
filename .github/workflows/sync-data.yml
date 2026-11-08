@@ -1,0 +1,44 @@
+# M3 Deliverable (opencode-agent):
+# Daily Scheduled Sync from Google Sheets CSV -> GitHub (blogerr / agentpulse.pro)
+name: Sync Google Sheets Senior Relocation Data
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Runs daily at 06:00 UTC
+  workflow_dispatch:      # Allows manual 1-click trigger from GitHub Actions UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out blogerr repository
+        uses: actions/checkout@v4
+
+      - name: Download latest published CSV from Google Sheets
+        env:
+          GOOGLE_SHEETS_CSV_URL: ${{ secrets.GOOGLE_SHEETS_CSV_URL }}
+        run: |
+          mkdir -p src/data
+          if [ -n "$GOOGLE_SHEETS_CSV_URL" ]; then
+            curl -sfL "$GOOGLE_SHEETS_CSV_URL" -o src/data/florida_communities.csv
+          else
+            echo "GOOGLE_SHEETS_CSV_URL secret not set yet; validating existing src/data/florida_communities.csv"
+          fi
+
+      - name: Validate CSV & compute Carrying Cost Index JSON
+        run: |
+          python3 scripts/validate_and_score.py
+
+      - name: Commit and push updated dataset if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/florida_communities.csv src/data/communities.json
+          if git diff --staged --quiet; then
+            echo "No changes in Florida senior relocation dataset."
+          else
+            git commit -m "Auto-update Florida senior relocation dataset & carrying cost index [skip ci]"
+            git push
+          fi
