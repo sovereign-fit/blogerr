@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /internal/
 
 # AI & Search Engine Crawlers
 User-agent: Googlebot
@@ -16,4 +14,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://www.sovereignaisystems.co/sitemap.xml
+Sitemap: https://agentpulse.pro/sitemap.xml
